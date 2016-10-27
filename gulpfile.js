@@ -1,18 +1,14 @@
 var gulp = require('gulp'),
  connect = require('gulp-connect');
- //historyApiFallback = require('connect-history-api-fallback');
+
 
 // Servidor web de desarrollo
 gulp.task('server', function() {
      connect.server({
      root: './app',
-     hostname: '0.0.0.0',
      port: 7000,
      livereload: true
-     /*middleware: function(connect, opt) {
-         return [ historyApiFallback ];
-        }*/
-    });
+     });
 });
 
 
@@ -39,4 +35,4 @@ gulp.task('watch', function() {
 });
 
 
-gulp.task('default', ['server', 'watch']);
+gulp.task('default', [ 'watch','server']);
