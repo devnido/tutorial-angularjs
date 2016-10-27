@@ -36,6 +36,26 @@ gulp.task('jshint', function() { return gulp.src('./app/scripts/**/*.js')
 .pipe(jshint('.jshintrc')) .pipe(jshint.reporter('jshint-stylish'))
 .pipe(jshint.reporter('fail')); });
 
+
+gulp.task('inject', function () {
+  var target = gulp.src('./app/index.html');
+  // It's not necessary to read the files (will speed up things), we're only after their paths:
+  var sources = gulp.src(['./app/scripts/**/*.js','./app/stylesheets/**/*.css'], {read: false});
+
+  return target.pipe(inject(sources))
+    .pipe(gulp.dest('./app'));
+});
+
+// Inyecta las librerias que instalemos vía Bower
+// Inyecta las librerias que instalemos vía Bower
+gulp.task('wiredep', function () {
+gulp.src('./app/index.html')
+.pipe(wiredep({
+directory: './app/lib'
+}))
+.pipe(gulp.dest('./app'));
+});
+
 // Vigila cambios que se produzcan en el código
 // y lanza las tareas relacionadas
 gulp.task('watch', function() {
@@ -47,23 +67,17 @@ gulp.task('watch', function() {
 
 // Busca en las carpetas de estilos y javascript los archivos que hayamos creado
 // para inyectarlos en el index.html
-gulp.task('inject', function() {
-     var sources = gulp.src(['./app/scripts/**/*.js','./app/stylesheets/**/*.css']);
-        return gulp.src('index.html', {cwd: './app'})
-            .pipe(inject(sources, {
-                            read: false,
-                            ignorePath: '/app'
-                        }))
-            .pipe(gulp.dest('./app'));
-});
-// Inyecta las librerias que instalemos vía Bower
-gulp.task('wiredep', function () {
- gulp.src('./app/index.html')
- .pipe(wiredep({
- directory: './app/lib'
- }))
- .pipe(gulp.dest('./app'));
-});
+//gulp.task('inject', function() {
+//     var sources = gulp.src(['./app/scripts/**/*.js','./app/stylesheets/**/*.css'],{read: false});
+
+
+//        return gulp.src('index.html')
+//            .pipe(inject(sources))
+//            .pipe(gulp.dest('./app'));
+//});
+
+
+
 
 
 gulp.task('default',  ['server', 'inject', 'wiredep', 'watch']);
